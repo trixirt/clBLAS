@@ -461,8 +461,8 @@ genHead(
     SubgVarNames *pSubgVNames,
     bool subgMode)
 {
-    char tmp[1024], tmp1[128];
-    char start[128], end[128];
+    char tmp[1024], tmp1[512];
+    char start[256], end[256];
     char *p;
     const char *vecTypeA;
     unsigned int vlenA, vlenB;
@@ -1502,7 +1502,7 @@ genUpdateTailedDiagTile(
     const BlasGenSettings *gset,
     UpdateResultFlags uflags)
 {
-    char tmp[1024];
+    char tmp[2048];
     char s1[1024], s2[256];
     char src[32], dst[32];
     char *p;

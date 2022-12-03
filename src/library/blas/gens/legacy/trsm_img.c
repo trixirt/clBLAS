@@ -622,7 +622,7 @@ genReorderSolution(
     const char *outTypeName,
     unsigned int colRegs)
 {
-    char tmp[1024], tmp1[1024];
+    char tmp[2048], tmp1[1024];
     char *p;
     unsigned i;
 
@@ -699,7 +699,7 @@ generator(
     struct KgenContext *ctx;
     CLBLASKernExtra *kextra = (CLBLASKernExtra*)extra;
     CLBLASKernExtra kextraTmp = *kextra;
-    char tmp[1024], tmp1[1024];
+    char tmp[2048], tmp1[1024];
     char blkmul[FUNC_NAME_MAXLEN];
     char updateResFn[FUNC_NAME_MAXLEN];
     char updateResGenericFn[FUNC_NAME_MAXLEN];

@@ -433,7 +433,7 @@ genVectorizedVecMulAdd(
         op = '+';
     }
 
-    sprintf(tmp, "%s %c= %s;\n", elC.buf, op, tmp2);
+    snprintf(tmp, MAX_LENGTH, "%s %c= %s;\n", elC.buf, op, tmp2);
 
     kgenAddStmt(ctx, tmp);
 }

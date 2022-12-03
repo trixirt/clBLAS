@@ -187,7 +187,7 @@ genRealDot(
 
     for (k = 0; k < lenK / vecLen; k++) {
         off = n * lenK / vecLen + k;
-        sprintf(tmp, "%sdot(a[%lu], b[%lu]);\n", prefix, k, off);
+        snprintf(tmp, MAX_LENGTH, "%sdot(a[%lu], b[%lu]);\n", prefix, k, off);
         kgenAddStmt(ctx, tmp);
     }
 }
@@ -208,7 +208,7 @@ genVecMul(
 
     sprintf(tmp, "sum = a[%d] * b[%lu]%s", 0, currCol * lenK, suff[type]);
     for (k = 1; k < lenK; k++) {
-        sprintf(tmp, "%s + a[%lu] * b[%lu]%s", tmp, k,
+	    snprintf(tmp, MAX_LENGTH, "%s + a[%lu] * b[%lu]%s", tmp, k,
                 currCol * lenK + k, suff[type]);
     }
     strcat(tmp, ";\n");
@@ -232,7 +232,7 @@ genMadMul(
     sprintf(tmp, "sum = a[%d] * b[%lu]%s;\n", 0, currCol * lenK,
             suff[type]);
     for (k = 1; k < lenK; k++) {
-        sprintf(tmp, "%ssum = mad(a[%lu], b[%lu]%s, sum);\n", tmp, k,
+	    snprintf(tmp, MAX_LENGTH, "%ssum = mad(a[%lu], b[%lu]%s, sum);\n", tmp, k,
                 currCol * lenK + k, suff[type]);
     }
     kgenAddStmt(ctx, tmp);
@@ -280,10 +280,10 @@ genVecSum(
     sprintf(tmp1, " sum.x");
     for (k = 1; k < sumLen; k++) {
         c = ((mulType == VECT_MULT_COMPLEX_REAL) && (k & 1)) ? '-' : '+';
-        sprintf(tmp1, "%s %c sum.%c", tmp1, c, vect[k]);
+        snprintf(tmp1, MAX_LENGTH, "%s %c sum.%c", tmp1, c, vect[k]);
     }
 
-    sprintf(tmp2, "c[%lu].%c += %s;\n", regOff, vect[vecOff], tmp1);
+    snprintf(tmp2, MAX_LENGTH, "c[%lu].%c += %s;\n", regOff, vect[vecOff], tmp1);
     kgenAddStmt(ctx, tmp2);
 }
 
@@ -533,26 +533,26 @@ declareBlkMul(
     argNames->skewRow = "skewRow";
     argNames->skewCol = "skewCol";
 
-    sprintf(s, "void\n"
+    snprintf(s, MAX_LENGTH, "void\n"
                "%cgemmBlock%s_%lu_%lu(\n",
             c, s1, m, n);
 
     if (!isPriv) {
-        sprintf(s, "%s    %s alpha,\n", s, typeName);
+	    snprintf(s, MAX_LENGTH, "%s    %s alpha,\n", s, typeName);
     }
     if (opts->aMobj == CLMEM_IMAGE) {
-        sprintf(s, "%s    __read_only image2d_t A,\n"
+	    snprintf(s, MAX_LENGTH, "%s    __read_only image2d_t A,\n"
                    "    int2 coordA,\n", s);
     }
     else {
-        sprintf(s, "%s    LPtr A,\n", s);
+	    snprintf(s, MAX_LENGTH, "%s    LPtr A,\n", s);
     }
     if (opts->bMobj == CLMEM_IMAGE) {
-        sprintf(s, "%s    __read_only image2d_t B,\n"
+	    snprintf(s, MAX_LENGTH, "%s    __read_only image2d_t B,\n"
                    "    int2 coordB,\n", s);
     }
     else {
-        sprintf(s, "%s    LPtr B,\n", s);
+	    snprintf(s, MAX_LENGTH, "%s    LPtr B,\n", s);
     }
 
     if (opts->flags & BLKMUL_OUTPUT_PRIVATE) {
@@ -562,18 +562,18 @@ declareBlkMul(
         else {
             typeName = (dtype == TYPE_COMPLEX_FLOAT) ? "float2" : "float4";
         }
-        sprintf(s, "%s    %s *c", s, typeName);
+        snprintf(s, MAX_LENGTH, "%s    %s *c", s, typeName);
     }
     else {
-        sprintf(s, "%s    LPtr tempC", s);
+        snprintf(s, MAX_LENGTH, "%s    LPtr tempC", s);
 
     }
 
     if (opts->flags & BLKMUL_SKEW_ROW) {
-        sprintf(s, "%s,\n    int2 skewRow", s);
+        snprintf(s, MAX_LENGTH, "%s,\n    int2 skewRow", s);
     }
     if (opts->flags & BLKMUL_SKEW_COLUMN) {
-        sprintf(s, "%s,\n    int skewCol", s);
+        snprintf(s, MAX_LENGTH, "%s,\n    int skewCol", s);
     }
     strcat(s, ")\n");
 
@@ -659,12 +659,12 @@ blkMulGen(
     if (!isInlined) {
         strcpy(s, "uint k;\n");
     }
-    sprintf(s, "%s%s a[%lu], b[%lu];\n",s , tNameIn, subK / vecLen,
+    snprintf(s, MAX_LENGTH, "%s%s a[%lu], b[%lu];\n",s , tNameIn, subK / vecLen,
 			n * subK / vecLen);
 
     if (!isPriv) {
         // declare registers for result
-        sprintf(s, "%s%s c[%u];\n", s, tNameOut, nrRegs);
+	    snprintf(s, MAX_LENGTH, "%s%s c[%u];\n", s, tNameOut, nrRegs);
     }
 
     // 'dot' function can't be used for complex types
@@ -673,7 +673,7 @@ blkMulGen(
     }
 
     if ((core == BLKMUL_SEPARATE_MULADD) || isComplexType(dtype)) {
-        sprintf(s,"%s%s sum;\n", s, tNameIn);
+	    snprintf(s, MAX_LENGTH, "%s%s sum;\n", s, tNameIn);
     }
 
     kgenAddStmt(ctx, s);
@@ -732,10 +732,10 @@ blkMulGen(
                               (int)coords[trb], pitchB / vecLen,
                                subdims[1].x, opts, &argNames, (subK == vecLen));
             if (isImageB) {
-                sprintf(s, imageFetch[isDouble], 'b', off, "B", s1);
+                snprintf(s, MAX_LENGTH, imageFetch[isDouble], 'b', off, "B", s1);
             }
             else {
-                sprintf(s, "b[%lu] = B.%s[%s];\n", off, ptrNameIn, s1);
+		    snprintf(s, MAX_LENGTH, "b[%lu] = B.%s[%s];\n", off, ptrNameIn, s1);
             }
             ret = kgenAddStmt(ctx, s);
         }
@@ -749,10 +749,10 @@ blkMulGen(
                                (int)k, pitchA / vecLen, subdims[1].y, opts,
                                &argNames, (subK == vecLen));
             if (isImageA) {
-                sprintf(s, imageFetch[isDouble], 'a', k, "A", s1);
+                snprintf(s, MAX_LENGTH, imageFetch[isDouble], 'a', k, "A", s1);
             }
             else {
-                sprintf(s,"a[%lu] = A.%s[%s];\n", k, ptrNameIn, s1);
+		    snprintf(s, MAX_LENGTH, "a[%lu] = A.%s[%s];\n", k, ptrNameIn, s1);
             }
             ret = kgenAddStmt(ctx, s);
         }

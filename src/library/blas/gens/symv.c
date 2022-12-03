@@ -189,7 +189,7 @@ genPostFetchMirror(
     Tile *tileb = (Tile *)&pfPriv->gset->tileA;
     Tile *tilea = &((struct symvPrivate *)priv)->tilea;
     bool tra = ((mulOpts->flags & TILEMUL_TRA) != 0);
-    char tmp[1024];
+    char tmp[2048];
     char stmtStr[2][128];
     size_t blockx, blocky;
     unsigned int x, y;

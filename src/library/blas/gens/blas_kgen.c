@@ -38,6 +38,7 @@
 #include "kerngen.h"
 
 #define IDX_INVAL ((unsigned int)-1)
+#define MAX_LENGTH 4096
 
 enum {
     COORD_STRLEN = 64
@@ -230,7 +231,7 @@ defaultTilePostFetch(
     MatrixRole mrole,
     void *priv)
 {
-    char tmp[1024], cond[128];
+    char tmp[MAX_LENGTH], cond[MAX_LENGTH];
     Kstring src;
     TilePostFetchPrivate *pfPriv = (TilePostFetchPrivate*)priv;
     bool distVect = (pfPriv->gset->flags & BGF_DISTINCT_VECLEN);
@@ -276,7 +277,7 @@ defaultTilePostFetch(
         else {
             tmp[0] = '\0';
         }
-        sprintf(cond, "(%s%s < %s)", vnames->k, tmp, vnames->sizeK);
+        snprintf(cond, MAX_LENGTH, "(%s%s < %s)", vnames->k, tmp, vnames->sizeK);
 
         for (i = 0; (i < maxI) && !ret; i += step) {
             if (mrole != MATRIX_A) {
@@ -285,7 +286,7 @@ defaultTilePostFetch(
             else {
                 sprintfTileElement(&src, tile, i, j, step);
             }
-            sprintf(tmp, "%s = %s ? %s : 0;\n", src.buf, cond, src.buf);
+            snprintf(tmp, MAX_LENGTH, "%s = %s ? %s : 0;\n", src.buf, cond, src.buf);
             ret = kgenAddStmt(ctx, tmp);
         }
     }

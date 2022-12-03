@@ -102,7 +102,7 @@ addTestSuffix(
     BlkMulOpts *mulOpts)
 {
     char c;
-    char s[300];
+    char s[512];
     bool isImageA, isImageB;
     char *tName;
     size_t m, n, k;

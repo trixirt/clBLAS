@@ -445,7 +445,7 @@ generator(
 {
     struct KgenContext *ctx;
     CLBLASKernExtra *kextra = (CLBLASKernExtra*)extra;
-    char tmp[4096], tmp1[4096];
+    char tmp[4096], tmp1[2048];
     char *p;
     // is the iteration over N, N at the top level
     const char *typeName;

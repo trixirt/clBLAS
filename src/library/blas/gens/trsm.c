@@ -1076,7 +1076,7 @@ generator(
    const struct PGranularity *pgran,
    void *extra)
 {
-    char tmp[1024];
+    char tmp[2048];
     struct KgenContext *ctx;
     ssize_t ret;
     CLBLASKernExtra *kextra = (CLBLASKernExtra*)extra;

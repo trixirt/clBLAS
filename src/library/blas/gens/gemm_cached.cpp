@@ -266,8 +266,8 @@ generator(
     KernelExtraFlags kflags = kextra->flags;
     DataType dtype = kextra->dtype;
     char tempTemplate[64*1024]; //PENDING: Is it safe to have 64K in stack for threadSafety?
-    char itemx[10], itemy[10], width[10], itemy_by_width[10], itemx_by_width[10];
-    char bwidth[10], panel_by_v[10];
+    char itemx[32], itemy[32], width[32], itemy_by_width[32], itemx_by_width[32];
+    char bwidth[32], panel_by_v[32];
     size_t Y, X, BLOCKSIZE, ITEMX, ITEMY;
 	bool doVLOAD = false;
 	unsigned int veclen;

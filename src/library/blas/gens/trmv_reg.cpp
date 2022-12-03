@@ -262,7 +262,7 @@ generator(
 
 	size_t BLOCKSIZE  = pgran->wgSize[0];
 	char tempTemplate[32*1024];
-	char targetRows[10], blockSize[10];
+	char targetRows[32], blockSize[32];
 
 	if ( buf == NULL) // return buffer size
 	{

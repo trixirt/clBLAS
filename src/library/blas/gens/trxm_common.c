@@ -33,7 +33,7 @@ declareTrxmKernel(
     bool declareC,
     bool restrictPointers)
 {
-    char tmp[1024];
+    char tmp[4096];
     char strC[1024];
     char fpref, fsuff;
     const char *typeName;
@@ -111,7 +111,7 @@ genTrxmBMatrShift(
     KernelExtraFlags kflags,
     bool useC)
 {
-    char tmp[1024], addstr[1024];
+    char tmp[2048], addstr[1024];
     int len = 0;
     const char *opstr;
     char coordNames[2] = {'M', 'N'};
@@ -192,7 +192,7 @@ genTrxmPostFetchZero(
     void *priv)
 {
     TilePostFetchPrivate *pfPriv = (TilePostFetchPrivate*)priv;
-    char tmp[1024];
+    char tmp[2048];
     char stmtStr[512];
 
     const CLBLASKernExtra *kextra = pfPriv->gset->kextra;
